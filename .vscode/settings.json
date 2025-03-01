@@ -13,5 +13,8 @@
             "database": "banking",
             "username": "root"
         }
+    ],
+    "cSpell.words": [
+        "sqlx"
     ]
 }

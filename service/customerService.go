@@ -2,13 +2,14 @@ package service
 
 import (
 	"github.com/SamareshSingh/banking/domain"
+	"github.com/SamareshSingh/banking/dto"
 	"github.com/SamareshSingh/banking/errs"
 )
 
 // Service interface. Primary Port
 type CustomerService interface {
 	GetAllCustomer(string) ([]domain.Customer, *errs.AppError)
-	GetCustomer(string) (*domain.Customer, *errs.AppError)
+	GetCustomer(string) (*dto.CustomerResponse, *errs.AppError)
 }
 
 // Service implementation --> Business Logic. this has dependency on the Repository interface
@@ -28,8 +29,15 @@ func (s DefaultCustomerService) GetAllCustomer(status string) ([]domain.Customer
 	return s.repo.FindAll(status)
 }
 
-func (s DefaultCustomerService) GetCustomer(id string) (*domain.Customer, *errs.AppError) {
-	return s.repo.ById(id)
+func (s DefaultCustomerService) GetCustomer(id string) (*dto.CustomerResponse, *errs.AppError) {
+	c, err := s.repo.ById(id)
+	if err != nil {
+		return nil, err
+	}
+
+	response := c.ToDto()
+
+	return &response, nil
 }
 
 // Helper function to instantiate the DefaultCustomerService
